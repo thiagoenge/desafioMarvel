@@ -59,8 +59,9 @@
 		// abre a conexão com a api da marvel
 		$http.get('https://gateway.marvel.com:443/v1/public/characters?limit=1&apikey=ebdfa816a9ce6fea4176886d00243106').then(function(response){
 			//guarda as informações recebidas no formato json
-			self.items = response.data
-			console.log("responsta:",self.items)
+			self.items = response.data.results[0].id
+			console.log("resposta:",self.items)
+			//trata se houver algum erro na requisição
 		},function(err){
 			console.log("Erro inesperado:",err)
 		});
