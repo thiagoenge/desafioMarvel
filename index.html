@@ -7,6 +7,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	<!-- GOOGLE FONTS -->
 	<link href="https://fonts.googleapis.com/css?family=Bitter|Raleway" rel="stylesheet">
+	<!-- FONT AWESOME -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<!-- GENERAL STYLES -->
 	<link rel="stylesheet" href="assets/css/style.css">
 
@@ -18,54 +20,40 @@
 				<h1 class="text-color-tertiary text-center">Você conhece esse personagem da Marvel?</h1>
 			</div>
 		</div>
-		<div class="row justify-content-center">
-			<div class="col-8 col-md-4" ng-controller="personagem as prg">
-				<img src="http://i.annihil.us/u/prod/marvel/i/mg/2/60/537bcaef0f6cf.jpg" alt="" class="img-fluid rounded">
-				<label for="resposta" class="dblock mt-md">Digite abaixo a resposta</label>
-				<input id="resposta" type="text" class="form-control form-control-lg" ng-model="nomePersonagem" value="{{nomePersonagem}}">
-				<span>{{nomePersonagem}}</span>
-				<div class="row justify-content-between mt-sm">
-					<div class="col-md-12 col-lg-4 text-center btn-group">
-						<input type="button" value="Responder" class="btn btn-tertiary text-color-dark btn-sm btn-block">
+		<div class="row justify-content-center" ng-controller="personagem as prg">
+			<div class="col-8 col-md-4">
+				<i ng-hide="prg.hideLoader" class="fa fa-spin fa-spinner"></i>
+				<img ng-show="prg.hideLoader" ng-src="{{prg.items.thumbnail.path}}.{{prg.items.thumbnail.extension}}" alt="" class="img-fluid rounded">
+				<form ng-submit="prg.submit()">
+					<div class="form-group">
+						<label for="resposta" class="dblock mt-md">Digite abaixo a resposta</label>
+						<input ng-model="prg.charNameInputed" id="resposta" ng-required type="text" ng-class="prg.validaCampoClass" class="form-control form-control-lg">
+						<span class="help-block"  ng-show="prg.validaCampo">Escreva o nome do personagem</span>
 					</div>
-					<div class="col-md-12 col-lg-8">
-						<input type="button" value="Desisto, não sei quem é!" class="btn btn-link btn-block btn-sm pr-none text-right">
+					<div class="row justify-content-between mt-sm">
+						<div class="col-md-12 col-lg-4 text-center btn-group">
+							<input type="submit" value="Responder" class="btn btn-tertiary text-color-dark btn-sm btn-block" >
+						</div>
+						<div class="col-md-12 col-lg-8">
+							<input ng-click="prg.getHelp()" type="button" value="Desisto, não sei quem é!" class="btn btn-link btn-block btn-sm pr-none text-right">
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 			<div class="col-2">
 				<h4 class="text-color-quaternary normal-font mb-none">Pontos</h4>
-				<span class="h2 text-color-secondary title-font mt-none">10</span>
+				<span class="h2 text-color-secondary title-font mt-none" ng-bind="prg.pontos">0</span>
+				<div class="row">
+					<div class="col-md-12 d-block d-md-none">
+						<hr>
+						<p class="mb-none">Compartilhar Resultado:</p>
+						<a target="_blank" ng-href="{{prg.shareWhatsapp}}" ><img class="img-fluid" src="https://www-cdn.whatsapp.net/img/v4/whatsapp-logo.svg" alt=""></a>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row justify-content-center mt-lg">
-			<div class="col-md-4 col-md-offset-4 text-center">
-				
-			</div>
-		</div>
-		
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-	<script>
-		//GET /v1/public/characters
-	//Inicia a aplicacao em angular
-	angular.module('marvelApp', [])
-	//Interagindo com a api
-	.controller('personagem',['$http', function($http) {
-		// evitando problemas com escopos
-		var self = this;
-		// container para os dados da requisicao
-		self.items = [];
-		// abre a conexão com a api da marvel
-		$http.get('https://gateway.marvel.com:443/v1/public/characters?limit=1&apikey=ebdfa816a9ce6fea4176886d00243106').then(function(response){
-			//guarda as informações recebidas no formato json
-			self.items = response.data.results[0].id
-			console.log("resposta:",self.items)
-			//trata se houver algum erro na requisição
-		},function(err){
-			console.log("Erro inesperado:",err)
-		});
-	}]);
-	</script>
+	<script src="assets/js/app.js"></script>
 </body>
 </html>
